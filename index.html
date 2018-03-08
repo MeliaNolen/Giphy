@@ -21,7 +21,8 @@
 
         <script>
 
-            
+            var stillURL;
+            var animatedURL;
             var initialAnimals = ["goat", "dog", "horse", "skunk", "pig"];
             
             // Creates buttons for OG animals in initialAnimals array
@@ -30,7 +31,7 @@
             }
             
             // Going to get gifs on click
-            $("button").on("click", function() {
+            $(document).on("click","button", function() {
                 var apiKey = "3Hm23cgbf4sSR76psy5ptKkDoqOcijFT";
                 var queryURL = "https://api.giphy.com/v1/gifs/search?api_key=" + apiKey + "&limit=10&q=" + this.id;
                 
@@ -41,23 +42,34 @@
                     console.log(response);
 
                     for (var i = 0; i < 10; i++) {
-                        var imageURL = response.data[i].images.fixed_width_still.url;
-                        var newImage = $("<img src=" + imageURL + " data-state=still />");
+                        stillURL = response.data[i].images.fixed_height_still.url;
+                        animatedURL = response.data[i].images.fixed_height.url;
+                        var newImage = $("<img src=" + stillURL + " data-still=" + stillURL + 
+                                        " data-animate=" + animatedURL + " data-state=still />");
                         
                         $("#animal-gifs").prepend(newImage);
                     }
-                }); 
+                });                 
             });
 
             // Switching from still to animated
-            $("img").on("click", function() {
-                console.log($(this).attr("src"));
-
+            $(document).on("click", "img", function() {
+                animatedURL = $(this).attr("data-animate");
+                stillURL = $(this).attr("data-still");
+               
+                if ($(this).attr("data-state") === "still") {
+                    $(this).attr("src", animatedURL);
+                    $(this).attr("data-state", "animated");
+                }
+                else if ($(this).attr("data-state") === "animated") {
+                    $(this).attr("src", stillURL);
+                    $(this).attr("data-state", "still");
+                }
             });
 
             // Adding new functional buttons
-            // only adds button, not working yet
-            $("#submit").on("click", function(event) {
+            
+            $(document).on("click","#submit", function(event) {
                 event.preventDefault();
                 var newAnimal = $("#animal-input").val().trim();
                 $("#animal-buttons").append("<button id=" + newAnimal + ">" + newAnimal + "</button>");
