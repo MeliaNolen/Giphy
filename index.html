@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Animal Gifs</title>
+        <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    </head>
+
+    <body>
+        <div id ="animal-buttons"></div>
+
+        <form id="animal-form">
+            <label for="animal-input">Add an animal</label>
+            <input type="text" id="animal-input">
+            <input type="submit" id="submit" value="submit">
+        </form>
+
+        <div id="animal-gifs"></div>
+
+
+
+        <script>
+            var initialAnimals = ["goat", "dog", "horse", "skunk", "goldfish"];
+            
+            // Creates buttons for OG animals in initialAnimals array
+            for (var i = 0; i < initialAnimals.length; i++) {
+                var newButton = $("#animal-buttons").append("<button id=" + initialAnimals[i] + ">" + initialAnimals[i] + "</button>");
+                
+            }
+            
+            // Going to get gifs on click
+            $("button").on("click", function() {
+
+                var apiKey = "3Hm23cgbf4sSR76psy5ptKkDoqOcijFT";
+                var queryURL = "https://api.giphy.com/v1/gifs/search?api_key=" + apiKey + "&limit=10&q=" + this.id;
+                console.log(this.id);
+                
+                $.ajax({
+                    url: queryURL,
+                    method: 'GET'
+                }).then( function(response) {
+                    console.log(response);
+
+                    for (var i = 0; i < 10; i++) {
+                        var imageURL = response.data[i].images.fixed_width_still.url;
+                        var newImage = $("<img src=" + imageURL + ">");
+                        console.log(newImage);
+                        console.log(imageURL);
+
+                        $("#animal-gifs").prepend(newImage);
+                        
+                    }
+                }); 
+            });
+        </script>
+
+    </body>
+</html>
