@@ -20,20 +20,19 @@
 
 
         <script>
-            var initialAnimals = ["goat", "dog", "horse", "skunk", "goldfish"];
+
+            
+            var initialAnimals = ["goat", "dog", "horse", "skunk", "pig"];
             
             // Creates buttons for OG animals in initialAnimals array
             for (var i = 0; i < initialAnimals.length; i++) {
-                var newButton = $("#animal-buttons").append("<button id=" + initialAnimals[i] + ">" + initialAnimals[i] + "</button>");
-                
+                var newButton = $("#animal-buttons").append("<button id=" + initialAnimals[i] + ">" + initialAnimals[i] + "</button>"); 
             }
             
             // Going to get gifs on click
             $("button").on("click", function() {
-
                 var apiKey = "3Hm23cgbf4sSR76psy5ptKkDoqOcijFT";
                 var queryURL = "https://api.giphy.com/v1/gifs/search?api_key=" + apiKey + "&limit=10&q=" + this.id;
-                console.log(this.id);
                 
                 $.ajax({
                     url: queryURL,
@@ -43,15 +42,28 @@
 
                     for (var i = 0; i < 10; i++) {
                         var imageURL = response.data[i].images.fixed_width_still.url;
-                        var newImage = $("<img src=" + imageURL + ">");
-                        console.log(newImage);
-                        console.log(imageURL);
-
-                        $("#animal-gifs").prepend(newImage);
+                        var newImage = $("<img src=" + imageURL + " data-state=still />");
                         
+                        $("#animal-gifs").prepend(newImage);
                     }
                 }); 
             });
+
+            // Switching from still to animated
+            $("img").on("click", function() {
+                console.log($(this).attr("src"));
+
+            });
+
+            // Adding new functional buttons
+            // only adds button, not working yet
+            $("#submit").on("click", function(event) {
+                event.preventDefault();
+                var newAnimal = $("#animal-input").val().trim();
+                $("#animal-buttons").append("<button id=" + newAnimal + ">" + newAnimal + "</button>");
+            });
+
+
         </script>
 
     </body>
